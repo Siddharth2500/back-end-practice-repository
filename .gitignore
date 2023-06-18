@@ -1,0 +1,5 @@
+**/bin
+**/obj
+**/.terraform
+.terraform.lock.hcl
+main.tfplan
