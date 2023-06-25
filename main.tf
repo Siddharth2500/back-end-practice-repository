@@ -11,12 +11,17 @@ resource "azurerm_service_plan" "terraform_app_service_plan" {
   sku_name            = "F1"
 }
 
-resource "azurerm_app_service" "terraform_app_service" {
-  name                = "appservice06182023"
+resource "azurerm_linux_web_app" "terraform_app_service" {
+  name                = "rautapp2000"
   location            = azurerm_resource_group.terraform_app_service_rg.location
   resource_group_name = azurerm_resource_group.terraform_app_service_rg.name
-  app_service_plan_id = azurerm_service_plan.terraform_app_service_plan.id
+  service_plan_id     = azurerm_service_plan.terraform_app_service_plan.id
   site_config {
-    dotnet_framework_version = "v6.0"
+    always_on         = false
+    use_32_bit_worker = true
+    application_stack {
+      dotnet_version = "6.0"
+    }
   }
+
 }

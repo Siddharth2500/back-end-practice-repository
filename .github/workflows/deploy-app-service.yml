@@ -3,9 +3,9 @@ name: .NET Core
 on: [push]
 
 env:
-  AZURE_WEBAPP_NAME: UserApi # set this to your application's name
+  AZURE_WEBAPP_NAME: linuxappservice06252023 # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: "." # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: "7.0.x" # set this to the dot net version to use
+  DOTNET_VERSION: "6.0.x" # set this to the dot net version to use
 
 jobs:
   deploy-infrastructure:
@@ -33,6 +33,7 @@ jobs:
         run: terraform apply "main.tfplan"
 
   build:
+    needs: deploy-infrastructure
     runs-on: ubuntu-latest
 
     steps:
@@ -54,14 +55,14 @@ jobs:
           cd UserApi
           dotnet restore
           dotnet build --configuration Release
-          dotnet publish -c Release --property:PublishDir='${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+          dotnet publish -c Release --property:PublishDir='${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/userapi'
 
       # Deploy to Azure Web apps
       - name: "Run Azure webapp deploy action using Azure Credentials"
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }} # Replace with your app name
-          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp"
+          package: "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/UserApi/userapi"
 
       - name: logout
         run: |
